@@ -1,7 +1,11 @@
 const express = require('express');
 const app = express();
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 app.use(express.json());
 const TAFFY = require('taffy');
+
+let SCREET_TOKEN  = '4de3d53ad45933d7269fb6c80fe75c2';
 
 var todo_db = TAFFY([
     {
@@ -9,12 +13,20 @@ var todo_db = TAFFY([
         complete:false
     },
     {
-        title:'lorem ipsum dolor',
+        title:'lorem ipsu m dolor',
         complete:false
     }
 ]);
 
+app.set('view engine', 'ejs');
+
+app.use(express.static(__dirname+'/public'));
+
 app.get('/',(req,res)=>{
+    res.render('index');
+})
+
+app.get('/all',(req,res)=>{
     var data = todo_db().get()
     res.set({
         'Content-type':'application/json'

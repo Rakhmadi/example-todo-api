@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TodoApp</title>
+
+</head>
+<body>
+    <div id="app">
+        <h1 v-html="msg"></h1>
+        {{dataTodo}}
+    </div>
+
+    <!-- Script -->
+    <script src="/vue.js"></script>
+    <script src="/vuex.js"></script>
+
+    <script>
+
+        const App = {
+            mounted() {
+                this.$store.dispatch('loadData');
+            },
+            data(){
+                return{
+                    msg:'hi'
+                }
+            },
+            computed:{
+                dataTodo() {
+                    return this.$store.state.data
+                },
+            }
+        }
+        const store = Vuex.createStore({
+            state(){
+                return{
+                    data:[]
+                }
+            },
+            mutations:{
+                GET_TODO(state,data){
+                    state.data = data
+                }
+            },
+            actions:{
+                loadData({commit}){
+                    fetch('/all').then(x=>x.json()).then((x)=>{
+                        commit('GET_TODO',x)
+                    }).catch(err=>{
+                        throw new Error(`API ${err}`)
+                    })
+                }
+            }
+        })
+        Vue.createApp(App).use(store).mount('#app')
+
+    </script>
+
+</body>
+</html>

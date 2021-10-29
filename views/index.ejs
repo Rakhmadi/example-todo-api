@@ -15,7 +15,7 @@
                 <input v-model="inputTitle" type="text" placeholder="Write Somethings " class="flex w-full py-2 px-3 filter drop-shadow-md rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <button @click="add()" class="py-2 px-3 bg-blue-500 rounded-md filter drop-shadow-md ml-3 text-white">Add</button>
             </div>
-            <div class="todo bg-blue-50 w-full mt-3 rounded-md filter drop-shadow-md" v-for="(item,index) in dataTodo" :key="items">
+            <div class="todo bg-blue-50 w-full mt-3 rounded-md filter drop-shadow-md " v-for="(item,index) in dataTodo" :key="items">
                 <div class="flex px-6 pt-6">
                     <h1 class="text-3xl md:text-4xl text-gray-700" :class="{'line-through':item.complete}">{{item.title}}</h1>
                 </div>
@@ -132,8 +132,7 @@
                     }).catch(err=>{
                         throw new Error(`API ${err}`)
                     })
-                },
-
+                }
             }
         })
         Vue.createApp(App).use(store).mount('#app')

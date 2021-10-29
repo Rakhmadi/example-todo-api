@@ -54,6 +54,13 @@ app.delete('/delete/:id',(req,res)=>{
     });
 })
 
+app.put('/update/:id',(req,res)=>{
+    todo_db({___id:req.params.id}).update(req.body);
+    res.send({
+        "msg":"Update Success",
+    });
+})
+
 app.listen(8080,()=>{
     console.log(`run in http://localhost:8080`);
 })

@@ -5,12 +5,26 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TodoApp</title>
+    <link rel="stylesheet" href="tailwind.css">
 
 </head>
 <body>
     <div id="app">
-        <h1 v-html="msg"></h1>
-        {{dataTodo}}
+        <div class="mx-5 md:mx-40 py-3 md:py-6 flex flex-col">
+            <div class="flex flex-row">
+                <input v-model="inputTitle" type="text" placeholder="Write Somethings " class="flex w-full py-2 px-3 filter drop-shadow-md rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <button @click="add()" class="py-2 px-3 bg-blue-500 rounded-md filter drop-shadow-md ml-3 text-white">Add</button>
+            </div>
+            <div class="todo bg-blue-50 w-full mt-3 rounded-md filter drop-shadow-md" v-for="(item,index) in dataTodo" :key="items">
+                <div class="flex px-6 pt-6">
+                    <h1 class="text-3xl md:text-4xl text-gray-700">{{item.title}}</h1>
+                </div>
+                <div class="flex justify-end px-6 pb-6 mt-1">
+                    <button class="text-1xl bg-blue-500 text-white rounded-md py-1 px-4 filter drop-shadow-md mr-1">Done</button>
+                    <button class="text-1xl bg-red-500 text-white rounded-md py-1 px-4 filter drop-shadow-md">Delete</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Script -->
@@ -25,13 +39,21 @@
             },
             data(){
                 return{
-                    msg:'hi'
+                    msg:'hi',
+                    inputTitle:''
                 }
             },
             computed:{
                 dataTodo() {
                     return this.$store.state.data
                 },
+            },methods:{
+                add(){
+                    this.$store.dispatch('addData',{
+                        "title":this.inputTitle,
+                        "complete":false
+                    })
+                }
             }
         }
         const store = Vuex.createStore({
@@ -43,12 +65,39 @@
             mutations:{
                 GET_TODO(state,data){
                     state.data = data
+                },
+                DEL_TODO(state,id){
+                    let index = state.data.findIndex(x=> x.id == id)
+                    state.data.splice(index,1)
+                },
+                ADD_TODO(state,payloadResponse){
+                    state.data.push(paloadResponse)
                 }
             },
             actions:{
                 loadData({commit}){
                     fetch('/all').then(x=>x.json()).then((x)=>{
                         commit('GET_TODO',x)
+                    }).catch(err=>{
+                        throw new Error(`API ${err}`)
+                    })
+                },
+                addData({dispatch},payload){
+                    fetch(`/add`,{
+                        method:'POST',
+                        headers:{
+                            'Content-type':'application/json'
+                        },
+                        body:JSON.stringify(payload)
+                    }).then(x=>x.json()).then(x=>{
+                        dispatch('loadData')
+                    }).catch(err=>{
+                        throw new Error(`API ${err}`)
+                    })
+                },
+                deleteData({commit},id){
+                    fetch(`/delete/${id}`).then(x=>jeon()).then(x=>{
+                        commit('DEL_TODO',id)
                     }).catch(err=>{
                         throw new Error(`API ${err}`)
                     })

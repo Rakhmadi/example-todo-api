@@ -61,6 +61,8 @@ app.put('/update/:id',(req,res)=>{
     });
 })
 
-app.listen(3000,()=>{
+const port = 3000;
+
+app.listen(port,()=>{
     console.log(`run in http://localhost:8080`);
 })

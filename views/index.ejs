@@ -12,7 +12,7 @@
     <div id="app">
         <div class="mx-5 md:mx-40 py-3 md:py-6 flex flex-col">
             <div class="flex flex-row">
-                <input v-model="inputTitle" type="text" placeholder="Write Somethings " class="flex w-full py-2 px-3 filter drop-shadow-md rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <input v-model="inputTitle" @keyup.enter.native = 'add()' type="text" placeholder="Write Somethings " class="flex w-full py-2 px-3 filter drop-shadow-md rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <button @click="add()" class="py-2 px-3 bg-blue-500 rounded-md filter drop-shadow-md ml-3 text-white">Add</button>
             </div>
             <div class="todo bg-blue-50 w-full mt-3 rounded-md filter drop-shadow-md " v-for="(item,index) in dataTodo" :key="items">
@@ -58,17 +58,20 @@
                     }
                 },
                 add(){
-                    this.$store.dispatch('addData',{
-                        "title":this.inputTitle,
-                        "complete":false
-                    })
+                    if (this.inputTitle != '') {
+                        this.$store.dispatch('addData',{
+                            "title":this.inputTitle,
+                            "complete":false
+                        })
+                        this.inputTitle = ''
+                    }
                 },
                 del(id){
                     this.$store.dispatch('deleteData',id)
                 },
                 update(pyld){
                     this.$store.dispatch('updateData',pyld)
-                }
+                },
             }
         }
         const store = Vuex.createStore({

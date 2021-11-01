@@ -16,7 +16,7 @@
                 <button @click="add()" class="py-2 px-3 bg-blue-500 rounded-md filter drop-shadow-md ml-3 text-white">Add</button>
             </div>
             <div class="mt-3">
-                <font class="font-semibold">Filter</font> - <font @click="$store.commit('FILTER_DOING')" class="link underline text-blue-500 cursor-pointer"> <span>1</span> Doing</font> - <font @click="$store.commit('FILTER_DONE')" class="link underline text-blue-500 cursor-pointer"> <span>{{doneTodosCount}}</span> Done</font>
+                <font class="font-semibold">Filter</font> - <font @click="$store.commit('FILTER_DOING')" class="link underline text-blue-500 cursor-pointer"> <span>{{doingTodosCount}}</span> Doing</font> - <font @click="$store.commit('FILTER_DONE')" class="link underline text-blue-500 cursor-pointer"> <span>{{doneTodosCount}}</span> Done</font>
             </div>
             <div class="todo bg-blue-50 w-full mt-3 rounded-md filter drop-shadow-md " v-for="(item,index) in dataTodo" :key="items">
                 <div class="flex px-6 pt-6">
@@ -52,6 +52,10 @@
                 },
                 doneTodosCount () {
                     return this.$store.state.data.filter(todo => todo.complete).length
+                },
+                doingTodosCount () {
+                    let x = this.$store.state.data;
+                    return x.length - x.filter(todo => todo.complete).length
                 }
 
             },
